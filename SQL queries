@@ -1,0 +1,377 @@
+################################ physical database design of Master program ################################
+
+(1) CREATE TABLE STATEMENTS
+
+CREATE TABLE	STUDENT				
+	(Student_ID	VARCHAR(15)	NOT NULL,	
+	Fname		VARCHAR(15)	NOT NULL,	
+	LName		VARCHAR(15)	NOT NULL,	
+	Deg_code	VARCHAR(15)	NOT NULL 	CHECK (Deg_code>0),
+	PRIMARY KEY	(Student_ID),			
+	FOREIGN KEY	(Deg_code) REFERENCES DEGREE(Deg_code) ON DELETE SET NULL);			
+					
+CREATE TABLE	CONCENTRATION				
+	(Conc_code		VARCHAR(15)	NOT NULL	CHECK (Conc_code>0),
+	Conc_name		VARCHAR(60)	NOT NULL,	
+	description		CHAR(180),		
+	Deg_code		VARCHAR(15)	NOT NULL	CHECK (Deg_code>0),
+	PRIMARY KEY	(Conc_code),			
+	FOREIGN KEY	(Deg_code) REFERENCES DEGREE(Deg_code) ON DELETE SET NULL);				
+	
+CREATE TABLE	COURSE				
+	(Course_no		CHAR(20)	NOT NULL 	CHECK (Course_no>0),
+	Course_name		VARCHAR(50)	NOT NULL,	
+	description		CHAR(200),		
+	PRIMARY KEY	(Course_no));			
+					
+CREATE TABLE	DEGREE				
+	(Deg_code		VARCHAR(15)	NOT NULL	CHECK (Deg_code>0),
+	Deg_name		VARCHAR(20)	NOT NULL,	
+	Description		CHAR(180),		
+	PRIMARY KEY	(Deg_code));			
+					
+CREATE TABLE	TRANSCRIPT				
+	(student_ID		VARCHAR(15)	NOT NULL,	
+	Course_no		CHAR(20)	NOT NULL	CHECK (Course_no>0),
+	Semester		VARCHAR(6)	NOT NULL,	
+	Year		INT	NOT NULL,	
+	Grade		CHAR(2)	DEFAULT NULL,	
+	PRIMARY KEY	(Student_ID,Course_no,Semester,year),
+	FOREIGN KEY	(student_ID) REFERENCES STUDENT(Student_ID) ON DELETE SET NULL,						
+	FOREIGN KEY	(Course_no) REFERENCES COURSE(Course_no) ON DELETE SET NULL);				
+						
+CREATE TABLE	DEGREE_COURSE				
+	(Deg_code		VARCHAR(15)	NOT NULL	CHECK (Deg_code>0),
+	Course_no		CHAR(20)	NOT NULL	CHECK (Course_no>0),
+	type		VARCHAR(8)	NOT NULL,
+	PRIMARY KEY	(Deg_code,Course_no),			
+	FOREIGN KEY	(Deg_code) REFERENCES DEGREE(Deg_code) ON DELETE SET NULL,					
+	FOREIGN KEY	(Course_no) REFERENCES COURSE(Course_no) ON DELETE SET NULL);				
+					
+CREATE TABLE	PREREQ				
+	(Course		CHAR(20)	NOT NULL	CHECK (Course>0),
+	Prereq		CHAR(20)	NOT NULL	CHECK (Prereq>0),
+	PRIMARY KEY	(Course,Prereq),
+  FOREIGN KEY	(Course) REFERENCES COURSE(Course_no) ON DELETE SET NULL,
+	FOREIGN KEY	(Prereq) REFERENCES COURSE(Course_no) ON DELETE SET NULL);						
+					
+CREATE TABLE	STUDNET_CONCENTRATION				
+	(Student_ID		VARCHAR(15)	NOT NULL,	
+	Conc_code		VARCHAR(15)	NOT NULL	CHECK (Conc_code>0),
+	PRIMARY KEY	(Student_ID,Conc_code),			
+	FOREIGN KEY	(student_ID) REFERENCES STUDENT(Student_ID) ON DELETE SET NULL,					
+	FOREIGN KEY	(Conc_code) REFERENCES CONCENTRATION(Conc_code) ON DELETE SET NULL);						
+			
+					
+CREATE TABLE	CONCENTRATION_COURSE				
+	(Conc_code		VARCHAR(15)	NOT NULL	CHECK (Conc_code>0),
+	Course_no		CHAR(20)	NOT NULL	CHECK (Course_no>0),
+	type		VARCHAR(8)	NOT NULL,
+	PRIMARY KEY	(Conc_code,Course_no),			
+	FOREIGN KEY	(Conc_code) REFERENCES CONCENTRATION(Conc_code) ON DELETE SET NULL,			
+	FOREIGN KEY	(Course_no) REFERENCES COURSE(Course_no) ON DELETE SET NULL);
+
+(2) INSERT STATEMENTS
+
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 535, 'Computer Networks');
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 579, 'Database Management');
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 566, 'Analysis of Algorithms');
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 575, 'Operating Systems');
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 662, 'Computer Language Theory');
+ Insert into COURSE(description,course_no,course_name) Values('MET CS', 673, 'Software Engineering');
+
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 532, 'Computer Graphics');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 664, 'Artificial Intelligence');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 665, 'Software Design and Patterns');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 683, 'Mobile Application Development');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 699, 'Data Mining and Business Intelligence');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 701, 'Rich Internet Application Development');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 767, 'Fuzzy, Expert, Genetic, and Neural Systems');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 773, 'Software Quality Management');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 690, 'Network Security');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 695, 'Enterprise Information Security');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 789, 'Cryptography');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 599, 'Biometrics');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 693, 'Digital Forensics and Investigations');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 703, 'Network Forensics');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 713, 'Advanced Digital Forensics');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 635, 'Network Design and Implementation');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 685, 'Network Design and Management');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 775, 'Advanced Networking');
+
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 520, 'Information Structures');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 546, 'Quantitative Methods for Information Systems');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 625, 'Business Data Communication and Networks');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 669, 'Database Design and Implementation for Business');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 682, 'Information Systems Analysis and Design');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 782, 'IT Strategy and Management');
+
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 779, 'Advanced Database Management');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 674, 'Database Security');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 689, 'Designing and Implementing a Data Warehouse');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 780, 'Database Administration');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 601, 'Web Application Development');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 633, 'Distributed Software Development and Management');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 651, 'Web Development with .NET');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 667, 'Enterprise Java');
+ Insert into COURSE(description,course_no,course_name) Values ('MET CS', 783, 'Enterprise Architecture');
+
+insert into DEGREE(DEG_CODE,DEG_NAME,DESCRIPTION) values(100,'MSCS', 'Program Description: A proram for computer professionals and those who intend to move into the computer field from other areas of study.');
+insert into DEGREE(DEG_CODE,DEG_NAME,DESCRIPTION) values(200,'MSCIS','Program Description: Designed for students who wish to combine technical competence in information systems with knowledge of managerial and organizational
+issues.');
+
+insert into CONCENTRATION values(101,'Security Concentration',NULL,100);
+insert into CONCENTRATION values(102,'Computer Networks Concentration',NULL,100);
+insert into CONCENTRATION values(201,'Computer Networks Concentration',NULL,200);
+insert into CONCENTRATION values(202,'Database Management and Business Intelligence Concentration',NULL,200);
+insert into CONCENTRATION values(203,'Web Application Development Concentration',NULL,200);
+
+insert into DEGREE_COURSE values(100,535,'Core');
+insert into DEGREE_COURSE values(100,579,'Core');
+insert into DEGREE_COURSE values(100,566,'Core');
+insert into DEGREE_COURSE values(100,575,'Core');
+insert into DEGREE_COURSE values(100,662,'Core');
+insert into DEGREE_COURSE values(100,673,'Core');
+
+insert into DEGREE_COURSE values(100,532,'Elective');
+insert into DEGREE_COURSE values(100,664,'Elective');
+insert into DEGREE_COURSE values(100,665,'Elective');
+insert into DEGREE_COURSE values(100,683,'Elective');
+insert into DEGREE_COURSE values(100,699,'Elective');
+insert into DEGREE_COURSE values(100,701,'Elective');
+insert into DEGREE_COURSE values(100,767,'Elective');
+insert into DEGREE_COURSE values(100,773,'Elective');
+insert into DEGREE_COURSE values(100,690,'Elective');
+insert into DEGREE_COURSE values(100,695,'Elective');
+insert into DEGREE_COURSE values(100,789,'Elective');
+insert into DEGREE_COURSE values(100,599,'Elective');
+insert into DEGREE_COURSE values(100,693,'Elective');
+insert into DEGREE_COURSE values(100,703,'Elective');
+insert into DEGREE_COURSE values(100,713,'Elective');
+insert into DEGREE_COURSE values(100,635,'Elective');
+insert into DEGREE_COURSE values(100,685,'Elective');
+insert into DEGREE_COURSE values(100,775,'Elective');
+
+insert into CONCENTRATION_COURSE values(101,690,'Core');
+insert into CONCENTRATION_COURSE values(101,695,'Core');
+insert into CONCENTRATION_COURSE values(101,789,'Core');
+
+insert into CONCENTRATION_COURSE values(101,599,'Elective');
+insert into CONCENTRATION_COURSE values(101,693,'Elective');
+insert into CONCENTRATION_COURSE values(101,703,'Elective');
+insert into CONCENTRATION_COURSE values(101,713,'Elective');
+
+insert into CONCENTRATION_COURSE values(102,635,'Core');
+insert into CONCENTRATION_COURSE values(102,685,'Core');
+insert into CONCENTRATION_COURSE values(102,690,'Core');
+insert into CONCENTRATION_COURSE values(102,775,'Core');
+
+insert into DEGREE_COURSE values(200,520,'Core');
+insert into DEGREE_COURSE values(200,546,'Core');
+insert into DEGREE_COURSE values(200,625,'Core');
+insert into DEGREE_COURSE values(200,669,'Core');
+insert into DEGREE_COURSE values(200,682,'Core');
+insert into DEGREE_COURSE values(200,782,'Core');
+
+insert into DEGREE_COURSE values(200,635,'Elective');
+insert into DEGREE_COURSE values(200,690,'Elective');
+insert into DEGREE_COURSE values(200,695,'Elective');
+insert into DEGREE_COURSE values(200,775,'Elective');
+insert into DEGREE_COURSE values(200,699,'Elective');
+insert into DEGREE_COURSE values(200,779,'Elective');
+insert into DEGREE_COURSE values(200,674,'Elective');
+insert into DEGREE_COURSE values(200,689,'Elective');
+insert into DEGREE_COURSE values(200,780,'Elective');
+insert into DEGREE_COURSE values(200,601,'Elective');
+insert into DEGREE_COURSE values(200,701,'Elective');
+insert into DEGREE_COURSE values(200,633,'Elective');
+insert into DEGREE_COURSE values(200,651,'Elective');
+insert into DEGREE_COURSE values(200,667,'Elective');
+insert into DEGREE_COURSE values(200,783,'Elective');
+
+insert into CONCENTRATION_COURSE values(201,635,'Core');
+insert into CONCENTRATION_COURSE values(201,690,'Core');
+insert into CONCENTRATION_COURSE values(201,695,'Core');
+insert into CONCENTRATION_COURSE values(201,775,'Core');
+
+insert into CONCENTRATION_COURSE values(202,699,'Core');
+insert into CONCENTRATION_COURSE values(202,779,'Core');
+
+insert into CONCENTRATION_COURSE values(202,674,'Elective');
+insert into CONCENTRATION_COURSE values(202,689,'Elective');
+insert into CONCENTRATION_COURSE values(202,780,'Elective');
+
+insert into CONCENTRATION_COURSE values(203,601,'Core');
+insert into CONCENTRATION_COURSE values(203,701,'Core');
+
+insert into CONCENTRATION_COURSE values(203,633,'Elective');
+insert into CONCENTRATION_COURSE values(203,651,'Elective');
+insert into CONCENTRATION_COURSE values(203,667,'Elective');
+insert into CONCENTRATION_COURSE values(203,783,'Elective');
+
+
+insert into STUDENT values(123456789, 'John', 'Smith',100);
+insert into TRANSCRIPT values(123456789, 535, 'Spring', 2014, 'A');
+insert into TRANSCRIPT values(123456789, 579, 'Spring', 2014, 'B');
+insert into TRANSCRIPT values(123456789, 566, 'Spring', 2014, 'A');
+insert into PREREQ values(682, 546);
+insert into PREREQ values(782, 546);
+
+(3) TEST QUERIES
+1.
+SELECT COURSE.COURSE_NAME, TRANSCRIPT.COURSE_NO,TRANSCRIPT.GRADE
+FROM COURSE, TRANSCRIPT 
+WHERE COURSE.COURSE_NO=TRANSCRIPT.COURSE_NO and TRANSCRIPT.SEMESTER = 'Spring' and 
+TRANSCRIPT.YEAR = 2014 and TRANSCRIPT.STUDENT_ID = 
+(SELECT STUDENT_ID from STUDENT WHERE FNAME='John' and LNAME='Smith')
+
+2.
+select CONC_NAME 
+FROM CONCENTRATION
+WHERE DEG_CODE = (select DEG_CODE from DEGREE where DEG_NAME = 'MSCS');
+
+3.
+SELECT COURSE_NO, COURSE_NAME
+FROM COURSE,PREREQ
+WHERE COURSE_NO = COURSE and prereq = 546;
+
+4.
+SELECT COURSE.COURSE_NO, COURSE.COURSE_NAME,CONCENTRATION_COURSE.TYPE
+FROM COURSE,CONCENTRATION_COURSE,CONCENTRATION
+WHERE COURSE.COURSE_NO = CONCENTRATION_COURSE.COURSE_NO and CONCENTRATION_COURSE.CONC_CODE = 
+CONCENTRATION.CONC_CODE and CONCENTRATION.CONC_CODE = (
+SELECT CONC_CODE FROM CONCENTRATION WHERE CONC_NAME = 'Web Application Development Concentration');
+
+##################################### Trigers #####################################
+1.
+create or replace trigger six_core_coureses
+  before insert on DEGREE_COURSE
+  for each row
+declare
+  num_course natural;
+begin
+  select count(*)  into num_course from DEGREE_COURSE 
+  where TYPE = 'Core'and DEG_CODE=:new.DEG_CODE;
+  if num_course > 5 then
+    raise_application_error(-20001, ('courses must be six'));
+  end if;
+end;
+
+
+#test
+select * from degree_course where TYPE='Core' and deg_code = 200;
+delete from degree_course where TYPE='Core' and deg_code = 200;
+
+insert into DEGREE_COURSE values(200,520,'Core');
+insert into DEGREE_COURSE values(200,546,'Core');
+insert into DEGREE_COURSE values(200,625,'Core');
+insert into DEGREE_COURSE values(200,669,'Core');
+insert into DEGREE_COURSE values(200,682,'Core');
+insert into DEGREE_COURSE values(200,782,'Core');
+
+insert into DEGREE_COURSE values(200,535,'Core');
+
+delete from degree_course where TYPE='Core' and deg_code = 100;
+
+insert into DEGREE_COURSE values(100,535,'Core');
+insert into DEGREE_COURSE values(100,579,'Core');
+insert into DEGREE_COURSE values(100,566,'Core');
+insert into DEGREE_COURSE values(100,575,'Core');
+insert into DEGREE_COURSE values(100,662,'Core');
+insert into DEGREE_COURSE values(100,673,'Core');
+
+insert into DEGREE_COURSE values(100,782,'Core');
+
+2.
+create or replace trigger course_before_transcript
+before insert on transcript
+for each row
+declare
+chage number;
+cour number;
+pre number;
+stu number;
+tcour number;
+begin
+chage :=0;
+cour := :new.course_no;
+stu := :new.student_id;
+select prereq.prereq into pre from prereq where prereq.course=cour;
+for c in (select course_no into tcour from transcript where student_id = stu)
+loop
+tcour := c.course_no;
+if pre = tcour then chage :=1;
+end if;
+end loop;
+if (chage = 0 )then
+    raise_application_error(-20001, ('prerequisite must be proceeded'));
+  end if;
+end;
+
+#test
+insert into transcript values(123456789, 782, 'Fall',2015,NULL)
+insert into transcript values(123456789, 682, 'Fall',2015,NULL)
+
+delete from transcript where transcript.semester = 'Fall';
+
+3.
+create or replace trigger two_concentration
+  before insert on STUDNET_CONCENTRATION
+  for each row
+declare
+  num_concen natural;
+begin
+  select count(*)  into num_concen from STUDNET_CONCENTRATION
+  where student_id=:new.student_id;
+  if num_concen > 1 then
+    raise_application_error(-20001, ('concentration must be two'));
+  end if;
+end;
+
+#test
+select * from STUDENT;
+
+insert into STUDENT
+values (113456789,'taylor','swift',200);
+
+insert into STUDNET_CONCENTRATION
+values (113456789,201);
+insert into STUDNET_CONCENTRATION
+values (113456789,202);
+insert into STUDNET_CONCENTRATION
+values (113456789,101);
+
+delete from STUDNET_CONCENTRATION where STUDENT_ID = 113456789;
+
+4.
+create or replace function c_gpa(tgrade transcript.grade%type)
+return number is
+gpa number;
+begin
+if tgrade = 'A' then gpa:= 4;
+elsif tgrade = 'A-' then gpa:= 3.7;
+elsif tgrade = 'B+' then gpa:= 3.3;
+elsif tgrade = 'B' then gpa:= 3;
+elsif tgrade = 'B-' then gpa:= 2.7;
+elsif tgrade = 'C+' then gpa:= 2.3;
+elsif tgrade = 'C' then gpa:= 2;
+elsif tgrade = 'C-' then gpa:= 1.7;
+elsif tgrade = 'D' then gpa:= 1;
+elsif tgrade = 'F' then gpa:= NULL;
+end if;
+return gpa;
+end c_gpa;
+
+
+create or replace function m_gpa(stu_id transcript.student_id%type)
+return number is
+av_gpa number;
+pre transcript.grade%type;
+begin
+select avg(c_gpa(transcript.grade)) into av_gpa from transcript
+where student_id = stu_id;
+return av_gpa;
+end m_gpa;
+
+#test
+select m_gpa(123456789) from transcript
